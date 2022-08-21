@@ -1,4 +1,4 @@
-namespace AppFinanceiro
+namespace FinancApi
 {
     public class WeatherForecast
     {

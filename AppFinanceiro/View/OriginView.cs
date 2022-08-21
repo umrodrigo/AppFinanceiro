@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Financ.Data.Models
+namespace Financ.View.Models
 {
     public class OriginView
     {

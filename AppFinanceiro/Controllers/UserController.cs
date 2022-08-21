@@ -1,7 +1,7 @@
 using Financ.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AppFinanceiro.Controllers
+namespace FinancApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]

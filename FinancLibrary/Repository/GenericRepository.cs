@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -50,21 +51,22 @@ namespace Financ.Data.Repository
             return entry.Entity;
         }
 
-        //public virtual T Update(T entity, params Expression<Func<T, object>>[] updateProperties)
-        //{
-        //    //Ensure only modifiels are updated
-        //    var dbEntityEntry = _context.Entry(entity);
-        //    dbEntityEntry.State = EntityState.Unchanged;
+        public virtual T Update(T entity, params Expression<Func<T, object>>[] updateProperties)
+        {
+            //Ensure only modifiels are updated
+            var dbEntityEntry = _context.Entry(entity);
+            dbEntityEntry.State = EntityState.Unchanged;
 
-        //    if (updateProperties.Any())
-        //    {
-        //        //update explicitly mentioned properties
-        //        foreach(var property in updateProperties)
-        //        {
-        //            dbEntityEntry.Property(property).IsModified = true;
-        //        }
-        //    }
-        //}
+            if (updateProperties.Any())
+            {
+                //update explicitly mentioned properties
+                foreach (var property in updateProperties)
+                {
+                    dbEntityEntry.Property(property).IsModified = true;
+                }
+            }
+            return dbEntityEntry.Entity;
+        }
 
         public virtual void Delete(T entity)
         {
@@ -78,36 +80,36 @@ namespace Financ.Data.Repository
             DbSet.RemoveRange(del);
         }
 
-        //public virtual Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate,
-        //    Func<IQueryable<T>>, IIncludableQueryable<T, object> include = null,
-        //    Func<IQueryable<T>>, IOrderedQueryable<T> orderBy = null)
-        //{
-        //    IQueryable<T> query = Queryable;
+        public virtual Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null)
+        {
+            IQueryable<T> query = Queryable;
 
-        //    if(include != null)
-        //    {
-        //        query = include(query);
-        //    }
+            if (include != null)
+            {
+                query = include(query);
+            }
 
-        //    if (predicate != null)
-        //    {
-        //        query = query.Where(predicate);
-        //    }
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
 
-        //    if (orderBy != null)
-        //    {
-        //        return orderBy(query).FirstOrDefaultAsync();
-        //    }
-        //    else
-        //    {
-        //        return query.FirstOrDefaultAsync();
-        //    }
-        //}
+            if (orderBy != null)
+            {
+                return orderBy(query).FirstOrDefaultAsync();
+            }
+            else
+            {
+                return query.FirstOrDefaultAsync();
+            }
+        }
 
-        //public virtual Task<int> ExecSpAsync(string spName, SqlParameter[] parameters)
-        //{
-        //    return _context.Database.ExecuteSqlRawAsync(spName, parameters);
-        //}
+        public virtual Task<int> ExecSpAsync(string spName, SqlParameter[] parameters)
+        {
+            return _context.Database.ExecuteSqlRawAsync(spName, parameters);
+        }
 
         public virtual async Task<int> SaveAsync()
         {

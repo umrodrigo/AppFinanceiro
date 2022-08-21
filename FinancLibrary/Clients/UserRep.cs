@@ -45,5 +45,9 @@ namespace Financ.Data.Clients
         {
             repo.Delete(instance);
         }
+        //private IEnumerable<User> GetAll()
+        //{
+        //    return repo.
+        //}
     }
 }

@@ -1,6 +1,7 @@
 using Financ.Api.ViewModel.Interface;
 using Financ.Api.View.Models;
 using Microsoft.AspNetCore.Mvc;
+using Financ.API.Services.Log;
 
 namespace Financ.API.Controllers
 {
@@ -9,9 +10,11 @@ namespace Financ.API.Controllers
     public class UserController : ControllerBase
     {
         protected readonly IUserViewModel _vm;
-        public UserController(IUserViewModel vm)
+        protected readonly ILog _logService;
+        public UserController(IUserViewModel vm, ILog log)
         {
             _vm = vm;
+            _logService = log;
         }
 
         [HttpGet("getAll")]
@@ -19,7 +22,14 @@ namespace Financ.API.Controllers
         {
             try
             {
-                return await _vm.GetAll();
+                var result = await _vm.GetAll();
+
+                _logService
+                    .Build(true)
+                    .Complements("Requisição de todos os Usuários")
+                    .Add();
+
+                return result;
             }
             catch (Exception)
             {

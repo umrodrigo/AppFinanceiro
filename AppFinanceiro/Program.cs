@@ -1,5 +1,7 @@
 using Financ.API.Helpers;
+using Financ.API.Services.Log;
 using System.Text.Json.Serialization;
+using static Financ.API.Services.Log.LogDependencyInjectionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services
     .AddServices();
 builder.Services
     .AddCustomOptions(builder.Configuration);
+builder.Services
+    .AddLogService(builder.Configuration.GetSection("LogSettings").Get<LogSettings>(), new LogMapperProfile());
 builder.Services
     .AddControllers()
     .AddJsonOptions(conf =>

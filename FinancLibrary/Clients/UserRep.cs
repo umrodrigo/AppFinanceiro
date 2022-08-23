@@ -69,12 +69,23 @@ namespace Financ.Data.Clients
         public Task<User> GetById(Guid id)
         {
             return repo
-                .FirstOrDefaultAsync(x => x.Id == id, 
+                .FirstOrDefaultAsync(x => x.Id == id,
                     include: inc => inc
                                     .Include(x => x.ProfileIncome)
-                                    .ThenInclude(x => x.Income)
+                                        .ThenInclude(x => x.Income)
+                                            .ThenInclude(x => x.Origin)
                                     .Include(x => x.ProfileExpense)
-                                    .ThenInclude(x => x.Expense));
+                                        .ThenInclude(x => x.Expense)
+                                            .ThenInclude(x => x.Origin)
+                                    .Include(x => x.ProfileExpense)
+                                        .ThenInclude(x => x.Expense)
+                                            .ThenInclude(x => x.ProfilePay)
+                                    .Include(x => x.ProfileExpense)
+                                        .ThenInclude(x => x.Expense)
+                                            .ThenInclude(x => x.Category)
+                                    .Include(x => x.ProfileExpense)
+                                        .ThenInclude(x => x.Expense)
+                                            .ThenInclude(x => x.Category));
         }
     }
 }

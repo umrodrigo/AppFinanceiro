@@ -1,5 +1,5 @@
-﻿using Financ.API.ViewModel;
-using Financ.API.ViewModel.Interface;
+﻿using Financ.Api.ViewModel;
+using Financ.Api.ViewModel.Interface;
 using Financ.Data;
 
 namespace Financ.API.Helpers

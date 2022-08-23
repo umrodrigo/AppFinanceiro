@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Financ.View.Models
+namespace Financ.Api.View.Models
 {
     public class ProfileExpenseView
     {

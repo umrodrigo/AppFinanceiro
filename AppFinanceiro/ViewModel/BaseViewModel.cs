@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Financ.Data;
 
-namespace Financ.API.ViewModel
+namespace Financ.Api.ViewModel
 {
     public class BaseViewModel
     {

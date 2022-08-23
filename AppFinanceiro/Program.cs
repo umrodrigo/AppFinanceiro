@@ -1,42 +1,49 @@
 using Financ.API.Helpers;
-using Financ.Data;
-using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//builder.Services.AddDbContext<FinancContext>(opt => 
-//    opt.UseSqlServer(
-//        builder.Configuration.GetConnectionString("FinancContext"), 
-//        b => b.MigrationsAssembly("Financ.API")));
+builder.Services.AddHttpClient();
+builder.Services.AddCustomCors(builder.Configuration, builder.Environment);
+
 builder.Services
     .AddDatabase(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services
-    .AddControllers();
+    .AddServices();
+builder.Services
+    .AddCustomOptions(builder.Configuration);
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(conf =>
+    {
+        conf.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        conf.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        conf.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        conf.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+    });
 builder.Services
     .AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services
-    .AddServices();
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
+app.UseHsts();
+app.UseRouting();
+app.UseCors("cors");
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseStaticFiles();
+app.MapControllers();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();

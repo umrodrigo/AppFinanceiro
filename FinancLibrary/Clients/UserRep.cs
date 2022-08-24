@@ -87,5 +87,40 @@ namespace Financ.Data.Clients
                                         .ThenInclude(x => x.Expense)
                                             .ThenInclude(x => x.Category));
         }
+
+        public Task<User> GetUserByAuth(Guid id)
+        {
+            return repo.Query.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<IEnumerable<string>> GetRoles(Guid id)
+        {
+            var claims = await repo.FirstOrDefaultAsync(z => z.Id == id,
+                inc =>
+                    inc.Include(i => i.UserAuth)
+                        .ThenInclude(i => i.Auth));
+
+            var userAuth = Enumerable.Empty<string>();
+
+            if (claims.UserAuth?.Count > 0)
+                userAuth = claims.UserAuth.Select(z => z.Auth.AutorizeName);
+
+            return userAuth;
+
+
+        }
+
+        public async Task<Guid> Authenticate(string username, string password)
+        {
+            try
+            {
+                var user = await repo.FirstOrDefaultAsync(z => z.Email == username && z.Password == password);
+                return user.Id;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

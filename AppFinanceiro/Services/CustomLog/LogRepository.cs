@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using static Financ.API.Services.Log.LogDependencyInjectionExtensions;
+using static Financ.Api.Services.Log.LogDependencyInjectionExtensions;
 
-namespace Financ.API.Services.Log
+namespace Financ.Api.Services.Log
 {
     public interface ILogRepository
     {

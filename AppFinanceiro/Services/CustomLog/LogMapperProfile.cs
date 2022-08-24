@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Financ.Api.View.Models;
 
-namespace Financ.API.Services.Log
+namespace Financ.Api.Services.Log
 {
     public class LogMapper
     {

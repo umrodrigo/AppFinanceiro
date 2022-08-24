@@ -1,8 +1,10 @@
 ﻿using Financ.Api.ViewModel;
 using Financ.Api.ViewModel.Interface;
+using Financ.Api.Security;
+using Financ.Api.Services.Cryptography;
 using Financ.Data;
 
-namespace Financ.API.Helpers
+namespace Financ.Api.Helpers
 {
     public static class Injector
     {
@@ -27,6 +29,11 @@ namespace Financ.API.Helpers
 
         public static IServiceCollection RegisterServices(IServiceCollection services)
         {
+            services.AddSingleton<ICryptoManager, CryptoManager>();
+            services.AddSingleton<IJsonWebToken, JsonWebToken>();
+
+            services.AddScoped<IAuthentication, Authentication>();
+
             services.AddScoped<IUserViewModel, UserViewModel>();
 
             Services = services;

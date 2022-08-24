@@ -1,4 +1,4 @@
-﻿namespace Financ.API.Services.Log
+﻿namespace Financ.Api.Services.Log
 {
     public interface ILog
     {

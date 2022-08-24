@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System.Text.Json.Serialization;
 
-namespace Financ.API.Services.Log
+namespace Financ.Api.Services.Log
 {
     [BsonIgnoreExtraElements]
     public class ActionLog

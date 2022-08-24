@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using System.Runtime.CompilerServices;
 
-namespace Financ.API.Services.Log
+namespace Financ.Api.Services.Log
 {
     public static class LogDependencyInjectionExtensions
     {

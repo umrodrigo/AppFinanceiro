@@ -9,6 +9,7 @@ namespace Financ.Data.Models
     public class User
     {
         public Guid Id { get; set; }
+        public Guid IdUserAuth { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -20,5 +21,6 @@ namespace Financ.Data.Models
         public DateTime UpdateAt { get; set; }
         public virtual ICollection<ProfileIncome> ProfileIncome { get; set; }
         public virtual ICollection<ProfileExpense> ProfileExpense { get; set; }
+        public virtual ICollection<UserAuth> UserAuth { get; set; }
     }
 }

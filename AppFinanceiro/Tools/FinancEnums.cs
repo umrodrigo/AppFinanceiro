@@ -1,4 +1,4 @@
-﻿namespace Financ.API.Tools
+﻿namespace Financ.Api.Tools
 {
     enum GenderEnum
     {

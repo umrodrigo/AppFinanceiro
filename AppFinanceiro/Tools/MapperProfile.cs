@@ -2,7 +2,7 @@
 using Financ.Data.Models;
 using Financ.Api.View.Models;
 
-namespace Financ.API.Tools
+namespace Financ.Api.Tools
 {
     public class MapperProfile : Profile
     {

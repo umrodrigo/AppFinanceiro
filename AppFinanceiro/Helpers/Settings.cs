@@ -1,16 +1,19 @@
-﻿using Financ.Data;
+﻿using Financ.Api.Models;
+using Financ.Api.Security;
+using Financ.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Financ.API.Helpers
+namespace Financ.Api.Helpers
 {
     public static class Settings
     {
         public static IServiceCollection AddCustomOptions(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.Configure<BearerTokenConf>(configuration.GetSection(nameof(BearerTokenConf)));
+            services.Configure<BearerTokenConf>(configuration.GetSection(nameof(BearerTokenConf)));
 
             return services;
         }
@@ -61,7 +64,49 @@ namespace Financ.API.Helpers
             return services;
         }
 
+        public static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
+        {
+            var bearerConf = configuration.GetSection(nameof(BearerTokenConf)).Get<BearerTokenConf>();
+            var sigBearer = new BearerSigning(bearerConf.Key, bearerConf.Issuer, bearerConf.Audiences);
+            services.AddSingleton(sigBearer);
+
+            var passportConf = configuration.GetSection(nameof(PassportTokenConf)).Get<PassportTokenConf>();
+            var sigPassport = new PassportSigning(passportConf.Key, passportConf.Issuer, passportConf.Audiences.Split(','));
+            services.AddSingleton(sigPassport);
+
+            services.AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = AuthSchemas.Bearer;
+                o.DefaultChallengeScheme = AuthSchemas.Bearer;
+            })
+            .AddJwtBearer(AuthSchemas.Bearer, jwtBearer =>
+            {
+                jwtBearer.RequireHttpsMetadata = true;
+                jwtBearer.SaveToken = true;
+                jwtBearer.TokenValidationParameters = sigBearer.TokenValidation;
+            })
+            .AddJwtBearer(AuthSchemas.Passport, jwtBearer =>
+            {
+                jwtBearer.RequireHttpsMetadata = true;
+                jwtBearer.SaveToken = true;
+                jwtBearer.TokenValidationParameters = sigPassport.TokenValidation;
+            });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy(AuthSchemas.Bearer, new AuthorizationPolicyBuilder(AuthSchemas.Bearer)
+                    .RequireAuthenticatedUser()
+                    .Build());
+
+                auth.AddPolicy(AuthSchemas.Passport, new AuthorizationPolicyBuilder(AuthSchemas.Passport)
+                    .RequireAuthenticatedUser()
+                    .Build());
+            });
+
+            return services;
+        }
     }
+
     public class DateTimeConverter : JsonConverter<DateTime>
     {
         public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

@@ -1,12 +1,16 @@
 using Financ.Api.ViewModel.Interface;
 using Financ.Api.View.Models;
 using Microsoft.AspNetCore.Mvc;
-using Financ.API.Services.Log;
+using Financ.Api.Services.Log;
+using Microsoft.AspNetCore.Authorization;
+using Financ.Api.Security;
 
-namespace Financ.API.Controllers
+namespace Financ.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    //[Authorize(Policy = AuthSchemas.Bearer, Roles = "users")]
+    //[ApiExplorerSettings(IgnoreApi = true)]
     public class UserController : ControllerBase
     {
         protected readonly IUserViewModel _vm;
